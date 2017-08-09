@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MIN_BLOCK_SIZE 4096
-
 typedef struct block
 {
 	size_t size;
@@ -10,6 +8,7 @@ typedef struct block
 	struct block* next;
 } block;
 
+#define MIN_BLOCK_SIZE sizeof(block)
 void* global_header = NULL;
 
 block* findFreeBlock(block** last, size_t size)
@@ -59,4 +58,13 @@ void* gc_malloc(size_t size)
 	}
 
 	return (b + 1);
+}
+
+void gc_free(void* p)
+{
+	if (!p) return;
+
+	block* b = (block*)p - 1; // find memory location of p
+	if (b->free != 0) return; // return if already free
+	b->free = 1; 		  // otherwise, free the block
 }
