@@ -24,6 +24,13 @@ typedef struct block
 void* global_header = NULL;
 
 /*
+ * Object Create
+ */
+
+// main funcs
+void new_object(void* p);
+
+/*
  * Malloc and Free
  */
 

@@ -9,6 +9,17 @@
   */
 
 /*
+ * Object Create
+ */
+
+// create a new object in memory
+void new_object(void* p) {
+    // call gc_malloc
+    
+    // push to internal struct
+}
+
+/*
  * Malloc and Free functions
  */
 
@@ -81,13 +92,20 @@ void gc_free(void* p)
 // mark all the used memory
 void mark()
 {
+    // loop through each reachable block
     
+    // mark it as reachable
+    
+    // if threshold is reached, sweep
 }
 
 // free all the unmarked memory
 void sweep()
 {
+    // loop through all blocks in memory
 
+    // de-allocate ones that aren't marked
+    //gc_free(...)
 }
 
 // recursively mark each block
