@@ -5,6 +5,12 @@
 
 void gc_malloc_and_free_test();
 
+typedef struct mallocTest
+{
+	char* c;
+	int x;
+} mallocTest;
+
 int main(void)
 {
 	gc_malloc_and_free_test();
@@ -13,23 +19,22 @@ int main(void)
 
 void gc_malloc_and_free_test()
 {
-	int *p1, *p2, *p3;
+	mallocTest *mt1, *mt2, *mt3;
+	mt1 = (mallocTest*)gc_malloc(sizeof(mallocTest));
+	printf("Address of mt1 = %p\n", mt1);
+	mt2 = (mallocTest*)gc_malloc(sizeof(mallocTest));
+	printf("Address of mt2 = %p\n", mt2);
 
-	p1 = (int*)gc_malloc(sizeof(int));
-	printf("Address of p1 = %p | sizeof(p1) = %ld\n", p1, sizeof(p1));
-	p2 = (int*)gc_malloc(sizeof(int));
-	printf("Address of p2 = %p | sizeof(p2) = %ld\n", p2, sizeof(p2));
-	p3 = (int*)gc_malloc(sizeof(int));
-	printf("Address of p3 = %p | sizeof(p3) = %ld\n", p3, sizeof(p3));
-
-	assert(sizeof(p1) == 8);
-	assert(sizeof(p2) == 8);
-	assert(sizeof(p3) == 8);
+	void* ptr = mt1;
+	printf("ptr = %p\n", ptr);
+	gc_free(mt1);
 	
-	gc_free(p1);
-	printf("Address of p1 = %p | sizeof(p1) = %ld\n", p1, sizeof(p1));
-	gc_free(p2);
-	gc_free(p3);
+	mt3 = (mallocTest*)gc_malloc(sizeof(mallocTest));
+	printf("Address of mt3 = %p\n", mt3);
+	assert(mt3 == ptr); // assert that we successfully reused mem location at mt1
+
+	gc_free(mt2);
+	gc_free(mt3);
 
 	printf("gc_malloc_test: Successful\n");
 }

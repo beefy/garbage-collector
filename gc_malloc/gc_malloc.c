@@ -4,12 +4,11 @@
 #include "gc_malloc.h"
 
 #define MIN_BLOCK_SIZE sizeof(block)
-//void* global_header = NULL;
 block* free_list = NULL;
 
 block* findFreeBlock(block** last, size_t size)
 {
-	block* current = global_header;
+	block* current = free_list;
 	while (current && (!(current->free) || current->size < size))
 	{
 		*last = current;
@@ -21,7 +20,7 @@ block* findFreeBlock(block** last, size_t size)
 
 block* requestAndExpand(block* last, size_t size)
 {
-	uintptr_t b = (uintptr_t)sbrk(0);	
+	uintptr_t b = (uintptr_t)sbrk(0); // find top of heap
 	uintptr_t request = (uintptr_t)sbrk(size + MIN_BLOCK_SIZE);
        	if (request == (uintptr_t)-1 || b != request)
 		return NULL; // cannot request more memory
@@ -54,16 +53,16 @@ void* gc_malloc(size_t size)
 
 	if (size <= 0) return NULL;
 
-	if (!free_list)//!global_header) // this is the first request
+	if (!free_list)// this is the first request
 	{
 		if (!(b = requestAndExpand(NULL, size))) return NULL;
-		//global_header = b;
 		free_list = b;
 	}
 	else
 	{
-		block* tail = free_list;//global_header;
-		if (!(b = findFreeBlock(&tail, size))) return NULL;
+		block* tail = free_list;
+		if (!(b = findFreeBlock(&tail, size)))
+			if (!(b = requestAndExpand(tail, size))) return NULL;
 		else b->free = 0;
 	}
 
@@ -77,4 +76,5 @@ void gc_free(void* p)
 	block* b = (block*)p - 1; // find memory location of p
 	if (b->free != 0) return; // return if already free
 	b->free = 1; 		  // otherwise, free the block
+	merge();
 }
