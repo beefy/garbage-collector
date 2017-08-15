@@ -10,6 +10,7 @@ typedef struct block
 
 block* findFreeBlock(block** last, size_t size);
 block* requestAndExpand(block* last, size_t size);
+void merge();
 void* gc_malloc(size_t size);
 void gc_free(void* p);
 
