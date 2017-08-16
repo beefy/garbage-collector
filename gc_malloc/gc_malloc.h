@@ -17,7 +17,6 @@ typedef struct block
 
 // constants
 #define MIN_BLOCK_SIZE sizeof(block)
-void* global_header = NULL;
 
 // object create
 void new_object(void* p);

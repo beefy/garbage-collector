@@ -24,7 +24,7 @@ compile: test.out
 
 # compile the tests
 test.out:
-	$(CC) -o ./bin/test.out test.c gc_malloc.c
+	$(CC) -o ./bin/test.out ./tests/gc_malloc_test.c ./gc_malloc/gc_malloc.c
 
 # remove all of the binary/executables
 clean:

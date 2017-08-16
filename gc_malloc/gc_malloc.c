@@ -9,7 +9,6 @@
   Drexel University
   */
 
-#define MIN_BLOCK_SIZE sizeof(block)
 block* free_list = NULL;
 
 /*
