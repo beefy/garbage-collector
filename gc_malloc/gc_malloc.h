@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <unistd.h>
+
 #ifndef _GC_MALLOC_H_
 #define _GC_MALLOC_H_
 
@@ -10,9 +15,9 @@
 // for memory allocation
 typedef struct block
 {
-	size_t size;
-	unsigned int free;
-	struct block* next;
+    size_t size;
+    unsigned int free;
+    struct block* next;
 } block;
 
 // constants
