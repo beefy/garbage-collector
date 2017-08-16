@@ -3,9 +3,31 @@
 #include <stdint.h>
 #include "gc_malloc.h"
 
+/**
+  GC Malloc
+  CS 283 - System Programming
+  Drexel University
+  */
+
 #define MIN_BLOCK_SIZE sizeof(block)
 block* free_list = NULL;
 
+/*
+ * Object Create
+ */
+
+// create a new object in memory
+void new_object(void* p) {
+    // call gc_malloc
+    
+    // push to internal struct
+}
+
+/*
+ * Malloc and Free functions
+ */
+
+// find and free a block of memory
 block* findFreeBlock(block** last, size_t size)
 {
 	block* current = free_list;
@@ -18,6 +40,7 @@ block* findFreeBlock(block** last, size_t size)
 	return current;
 }
 
+// expand the memory allocated for this process
 block* requestAndExpand(block* last, size_t size)
 {
 	uintptr_t b = (uintptr_t)sbrk(0); // find top of heap
@@ -47,6 +70,7 @@ void merge()
 	}
 }
 
+// malloc a block of memory
 void* gc_malloc(size_t size)
 {
 	block* b;
@@ -69,6 +93,7 @@ void* gc_malloc(size_t size)
 	return (b + 1);
 }
 
+// free an object
 void gc_free(void* p)
 {
 	if (!p) return;
@@ -78,3 +103,33 @@ void gc_free(void* p)
 	b->free = 1; 		  // otherwise, free the block
 	merge();
 }
+
+/*
+ * Mark and Sweep
+ */
+
+// mark all the used memory
+void mark()
+{
+    // loop through each reachable block
+    
+    // mark it as reachable
+    
+    // if threshold is reached, sweep
+}
+
+// free all the unmarked memory
+void sweep()
+{
+    // loop through all blocks in memory
+
+    // de-allocate ones that aren't marked
+    //gc_free(...)
+}
+
+// recursively mark each block
+void markAll()
+{
+
+}
+

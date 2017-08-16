@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include "gc_malloc.h"
+#include "../gc_malloc/gc_malloc.h"
 
 void gc_malloc_and_free_test();
 
