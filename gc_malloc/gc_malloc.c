@@ -18,6 +18,7 @@ block* free_list = NULL;
 
 // create a new object in memory
 void new_object(void* p) {
+    // make threshold, increment it, if above threshold, call mark and sweep
     // call gc_malloc
     
     // push to internal struct
