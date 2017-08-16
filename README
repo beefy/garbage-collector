@@ -1,0 +1,7 @@
+
+GC Malloc
+CS 283 - System Programming
+Drexel University
+
+To use this automated memory management system, call "new_object(void* p)" when you need to create a new object. You don't need to allocate memory for this object, or free the memory when done. The call to that function will allocate memory for it, and after a fixed number of objects are allocated, the unused memory will be automatically freed. 
+
