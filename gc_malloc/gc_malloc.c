@@ -6,7 +6,7 @@
   Drexel University
   */
 
-block* free_list = NULL;
+block* allocated_memory = NULL;
 
 /*
  * Object Create
@@ -111,21 +111,25 @@ void mark()
 
     // mark it as reachable
 
-    // if threshold is reached, sweep
 }
 
 // free all the unmarked memory
-void sweep()
+void sweep(block obj)
 {
     // loop through all blocks in memory
-
+    
     // de-allocate ones that aren't marked
     //gc_free(...)
 }
 
 // recursively mark each block
-void markAll()
+void markAll(block obj)
 {
-
+    // base case
+    if (obj == NULL) return;
+    // mark
+    obj.mark = 1;
+    // recurse
+    return markAll(obj.next);
 }
 

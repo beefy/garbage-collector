@@ -13,15 +13,18 @@
   */
 
 // for memory allocation
+#define MIN_BLOCK_SIZE sizeof(block)
+#define MAX_BLOCKS_TO_ALLOCATE 5
+int blocks_allocated = 0;
 typedef struct block
 {
     size_t size;
-    unsigned int free;
+    unsigned int mark;
     struct block* next;
+    void* memory;
 } block;
 
-// constants
-#define MIN_BLOCK_SIZE sizeof(block)
+
 
 // object create
 void new_object(void* p);
