@@ -104,32 +104,26 @@ void gc_free(void* p)
  * Mark and Sweep
  */
 
-// mark all the used memory
-void mark()
-{
-    // loop through each reachable block
-
-    // mark it as reachable
-
-}
-
-// free all the unmarked memory
-void sweep(block obj)
-{
-    // loop through all blocks in memory
-    
-    // de-allocate ones that aren't marked
-    //gc_free(...)
-}
-
-// recursively mark each block
-void markAll(block obj)
+// mark all reachable memory
+void mark(block obj)
 {
     // base case
     if (obj == NULL) return;
     // mark
     obj.mark = 1;
     // recurse
-    return markAll(obj.next);
+    return mark(obj.next);
+}
+
+
+// free all the unmarked memory
+void sweep(block obj)
+{
+    // base case
+    if (obj == NULL) return;
+    // sweep
+    if (!obj.mark) gc_free(obj.memory);
+    // recurse
+    return sweep(obj.next);
 }
 
