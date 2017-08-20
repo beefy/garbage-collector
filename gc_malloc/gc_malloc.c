@@ -123,6 +123,7 @@ void sweep(block obj)
     if (obj == NULL) return;
     // sweep
     if (!obj.mark) gc_free(obj.memory);
+    else obj.mark = 0;
     // recurse
     return sweep(obj.next);
 }
