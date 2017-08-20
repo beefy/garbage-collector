@@ -6,7 +6,7 @@
   Drexel University
   */
 
-block* free_list = NULL;
+block* allocated_memory = NULL;
 
 /*
  * Object Create
@@ -26,8 +26,8 @@ void new_object(void* p) {
 // find and free a block of memory
 block* findFreeBlock(block** last, size_t size)
 {
-    block* current = free_list;
-    while (current && (!(current->free) || current->size < size))
+    block* current = allocated_memory;
+    while (current && (!(current->mark) || current->size < size))
     {
         *last = current;
         current = current->next;
@@ -48,7 +48,7 @@ block* requestAndExpand(block* last, size_t size)
 
     ((block*)b)->size = size;
     ((block*)b)->next = NULL;
-    ((block*)b)->free = 0;
+    ((block*)b)->mark = 0;
 
     return (block*)b;
 }
@@ -56,12 +56,14 @@ block* requestAndExpand(block* last, size_t size)
 void merge()
 {
     block *current;
-    for (current = free_list; current != NULL; current = current->next)
+    for (current = allocated_memory; current != NULL; current = current->next)
     {
-        if (current->next && (current->free && current->next->free))
+        if (current->next && (current->mark && current->next->mark))
         {
-            current->size += current->next->size + sizeof(block); // increment block size to reflect merge
-            current->next = current->next->next; // absorb next block into current block
+            // increment block size to reflect merge
+            current->size += current->next->size + sizeof(block);
+            // absorb next block into current block
+            current->next = current->next->next;
         }
     }
 }
@@ -73,17 +75,18 @@ void* gc_malloc(size_t size)
 
     if (size <= 0) return NULL;
 
-    if (!free_list)// this is the first request
+    if (!allocated_memory)
     {
+        // this is the first request
         if (!(b = requestAndExpand(NULL, size))) return NULL;
-        free_list = b;
+        allocated_memory = b;
     }
     else
     {
-        block* tail = free_list;
+        block* tail = allocated_memory;
         if (!(b = findFreeBlock(&tail, size)))
             if (!(b = requestAndExpand(tail, size))) return NULL;
-            else b->free = 0;
+            else b->mark = 0;
     }
 
     return (b + 1);
@@ -95,8 +98,8 @@ void gc_free(void* p)
     if (!p) return;
 
     block* b = (block*)p - 1; // find memory location of p
-    if (b->free != 0) return; // return if already free
-    b->free = 1; 		  // otherwise, free the block
+    if (b->mark != 0) return; // return if already free
+    b->mark = 1; 		  // otherwise, free the block
     merge();
 }
 
@@ -104,28 +107,29 @@ void gc_free(void* p)
  * Mark and Sweep
  */
 
-// mark all the used memory
-void mark()
+// mark all reachable memory
+void mark(block* obj)
 {
-    // loop through each reachable block
-
-    // mark it as reachable
-
-    // if threshold is reached, sweep
+    // base case
+    if (obj == NULL) return;
+    // mark
+    obj->mark = 1;
+    // recurse
+    mark(obj->next);
+    return;
 }
+
 
 // free all the unmarked memory
-void sweep()
+void sweep(block* obj)
 {
-    // loop through all blocks in memory
-
-    // de-allocate ones that aren't marked
-    //gc_free(...)
-}
-
-// recursively mark each block
-void markAll()
-{
-
+    // base case
+    if (obj == NULL) return;
+    // sweep
+    if (!obj->mark) gc_free(obj->memory);
+    else obj->mark = 0;
+    // recurse
+    sweep(obj->next);
+    return;
 }
 
