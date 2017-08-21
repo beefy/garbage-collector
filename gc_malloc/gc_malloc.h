@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <unistd.h>
+
 #ifndef _GC_MALLOC_H_
 #define _GC_MALLOC_H_
 
@@ -8,15 +13,18 @@
   */
 
 // for memory allocation
+#define MIN_BLOCK_SIZE sizeof(block)
+#define MAX_BLOCKS_TO_ALLOCATE 5
+int blocks_allocated;
 typedef struct block
 {
-	size_t size;
-	unsigned int free;
-	struct block* next;
+    size_t size;
+    unsigned int mark;
+    struct block* next;
+    void* memory;
 } block;
 
-// constants
-#define MIN_BLOCK_SIZE sizeof(block)
+
 
 // object create
 void new_object(void* p);
@@ -29,8 +37,7 @@ void* gc_malloc(size_t size);
 void gc_free(void* p);
 
 // mark and sweep
-void mark();
-void sweep();
-void markAll();
+void mark(block* obj);
+void sweep(block* obj);
 
 #endif
