@@ -7,17 +7,20 @@
   */
 
 block* allocated_memory = NULL;
-
+int blocks_allocated = 0;
 /*
  * Object Create
  */
 
 // create a new object in memory
-void new_object(void* p, int size) {
-    // call gc_malloc
-    void* memory = gc_malloc(size);
-    
+void new_object(void* p, size_t size) {
+    blocks_allocated++;
+    if (blocks_allocated > MAX_BLOCKS_TO_ALLOCATE) {
+        sweep(allocated_memory);
+    }
 
+    // call gc_malloc
+    p = gc_malloc(size);
     // push to internal struct
 }
 

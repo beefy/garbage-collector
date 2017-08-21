@@ -15,7 +15,6 @@
 // for memory allocation
 #define MIN_BLOCK_SIZE sizeof(block)
 #define MAX_BLOCKS_TO_ALLOCATE 5
-int blocks_allocated;
 typedef struct block
 {
     size_t size;
@@ -27,7 +26,7 @@ typedef struct block
 
 
 // object create
-void new_object(void* p);
+void new_object(void* p, size_t size);
 
 // malloc and free
 block* findFreeBlock(block** last, size_t size);
