@@ -6,6 +6,7 @@
 void gc_malloc_and_free_test();
 void new_object_test();
 
+// sizeof = 16
 typedef struct mallocTest
 {
     char* c;
