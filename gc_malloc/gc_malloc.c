@@ -15,11 +15,15 @@ int blocks_allocated = 0;
 // create a new object in memory
 void new_object(void* p, size_t size) {
     blocks_allocated++;
+    printf("incrementing blocks_allocated. it is now %d\n", blocks_allocated);
     if (blocks_allocated > MAX_BLOCKS_TO_ALLOCATE) {
+        printf("blocks allocated is greater than %d. sweeping\n", MAX_BLOCKS_TO_ALLOCATE);
         sweep(allocated_memory);
+        blocks_allocated = 0;
     }
 
     // call gc_malloc
+    printf("allocated new object\n");
     p = gc_malloc(size);
     // push to internal struct
 }

@@ -4,6 +4,7 @@
 #include "../gc_malloc/gc_malloc.h"
 
 void gc_malloc_and_free_test();
+void new_object_test();
 
 typedef struct mallocTest
 {
@@ -14,6 +15,7 @@ typedef struct mallocTest
 int main(void)
 {
     gc_malloc_and_free_test();
+    new_object_test();
     return 0;
 }
 
@@ -37,4 +39,19 @@ void gc_malloc_and_free_test()
     gc_free(mt3);
 
     printf("gc_malloc_test: Successful\n");
+}
+
+void new_object_test() {
+    mallocTest *p[10];
+    new_object(p[0], sizeof(p));
+    printf("new object successfully allocated.\n");
+    printf("address of new object: %p\n", p[0]);
+    int i;
+    printf("creating more new objects\n");
+    for (i = 1; i < 10; i++) {
+        printf("creating object #%d\n", i);
+        new_object(p[i], sizeof(p));
+        printf("new object successfully allocated.\n");
+        printf("address of new object: %p\n", p[i]);
+    }
 }
