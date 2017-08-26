@@ -8,6 +8,7 @@
 
 block* allocated_memory = NULL;
 int blocks_allocated = 0;
+
 /*
  * Object Create
  */
@@ -132,7 +133,7 @@ void sweep(block* obj)
     // base case
     if (obj == NULL) return;
     // sweep
-//    if (!obj->mark) gc_free(obj->memory);
+    //    if (!obj->mark) gc_free(obj->memory);
     if (!obj->mark) free(obj->memory);
     else obj->mark = 0;
     // recurse

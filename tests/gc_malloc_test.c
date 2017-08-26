@@ -57,7 +57,7 @@ void new_object_test() {
     printf("%p\n", p3);
     p3 = (mallocTest *)new_object(sizeof(mallocTest));
     printf("%p\n\n", p3);
-    
+
     mallocTest *p4 = NULL;
     printf("%p\n", p4);
     p4 = (mallocTest *)new_object(sizeof(mallocTest));
@@ -76,7 +76,6 @@ void new_object_test() {
     mallocTest *p7 = NULL;
     printf("%p\n", p7);
     p7 = (mallocTest *)new_object(sizeof(mallocTest));
-    printf("%p\n\n", p7)
-
-
+    printf("%p\n\n", p7);
 }
+
