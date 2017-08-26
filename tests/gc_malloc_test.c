@@ -15,7 +15,7 @@ typedef struct mallocTest
 
 int main(void)
 {
-    gc_malloc_and_free_test();
+    // gc_malloc_and_free_test();
     new_object_test();
     return 0;
 }

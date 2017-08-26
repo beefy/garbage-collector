@@ -55,7 +55,6 @@ block* requestAndExpand(block* last, size_t size)
 
     ((block*)b)->size = size;
     ((block*)b)->next = NULL;
-    ((block*)b)->mark = 0;
 
     return (block*)b;
 }
@@ -78,7 +77,7 @@ void merge()
 // malloc a block of memory
 void* gc_malloc(size_t size)
 {
-    block* b;
+    void* b;
 
     if (size <= 0) return NULL;
 
@@ -86,19 +85,17 @@ void* gc_malloc(size_t size)
     {
         // this is the first request
         if (!(b = requestAndExpand(NULL, size))) return NULL;
-        allocated_memory = b;
     }
     else
     {
         block* tail = allocated_memory;
         if (!(b = findFreeBlock(&tail, size)))
-	{
-	    if (!(b = requestAndExpand(tail, size))) return NULL;
-            else b->mark = 0;
-	}
+	    {
+	        if (!(b = requestAndExpand(tail, size))) return NULL;
+	    }
     }
 
-    return (b + 1);
+    return b;
 }
 
 // free an object
@@ -136,7 +133,7 @@ void sweep(block* obj)
     if (obj == NULL) return;
     // sweep
     //    if (!obj->mark) gc_free(obj->memory);
-    if (!obj->mark) free(obj->memory);
+    if (!obj->mark) gc_free(obj->memory);
     else obj->mark = 0;
     // recurse
     sweep(obj->next);
@@ -144,10 +141,10 @@ void sweep(block* obj)
 }
 
 void *block_init(size_t size) {
-    block *b = (block *)malloc(sizeof(block));
+    block *b = (block *)gc_malloc(sizeof(block));
     b->size = size;
     b->mark = 0;
-    b->memory = malloc(size);
+    b->memory = gc_malloc(size);
 
     b->next = allocated_memory;
 
