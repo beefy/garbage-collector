@@ -7,15 +7,22 @@
   */
 
 block* allocated_memory = NULL;
+int blocks_allocated = 0;
 
 /*
  * Object Create
  */
 
 // create a new object in memory
-void new_object(void* p) {
-    // call gc_malloc
+void *new_object(size_t size) {
+    blocks_allocated++;
+    if (blocks_allocated > MAX_BLOCKS_TO_ALLOCATE) {
+        sweep(allocated_memory);
+        blocks_allocated = 0;
+    }
 
+    // call gc_malloc
+    return block_init(size);
     // push to internal struct
 }
 
@@ -75,7 +82,7 @@ void* gc_malloc(size_t size)
 
     if (size <= 0) return NULL;
 
-    if (!allocated_memory)
+    if (allocated_memory == NULL)
     {
         // this is the first request
         if (!(b = requestAndExpand(NULL, size))) return NULL;
@@ -128,10 +135,21 @@ void sweep(block* obj)
     // base case
     if (obj == NULL) return;
     // sweep
-    if (!obj->mark) gc_free(obj->memory);
+    //    if (!obj->mark) gc_free(obj->memory);
+    if (!obj->mark) free(obj->memory);
     else obj->mark = 0;
     // recurse
     sweep(obj->next);
     return;
 }
 
+void *block_init(size_t size) {
+    block *b = (block *)malloc(sizeof(block));
+    b->size = size;
+    b->mark = 0;
+    b->memory = malloc(size);
+
+    b->next = allocated_memory;
+
+    return b->memory;
+}
