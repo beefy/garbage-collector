@@ -26,7 +26,7 @@ typedef struct block
 
 
 // object create
-void new_object(void* p, size_t size);
+void *new_object(size_t size);
 
 // malloc and free
 block* findFreeBlock(block** last, size_t size);
@@ -39,4 +39,5 @@ void gc_free(void* p);
 void mark(block* obj);
 void sweep(block* obj);
 
+void *block_init(size_t size);
 #endif

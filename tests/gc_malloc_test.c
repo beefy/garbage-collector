@@ -43,16 +43,40 @@ void gc_malloc_and_free_test()
 }
 
 void new_object_test() {
-    mallocTest *p[10];
-    new_object(p[0], sizeof(p));
-    printf("new object successfully allocated.\n");
-    printf("address of new object: %p\n", p[0]);
-    int i;
-    printf("creating more new objects\n");
-    for (i = 1; i < 10; i++) {
-        printf("creating object #%d\n", i);
-        new_object(p[i], sizeof(p));
-        printf("new object successfully allocated.\n");
-        printf("address of new object: %p\n", p[i]);
-    }
+    mallocTest *p1 = NULL;
+    printf("%p\n", p1);
+    p1 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p1);
+
+    mallocTest *p2 = NULL;
+    printf("%p\n", p2);
+    p2 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p2);
+
+    mallocTest *p3 = NULL;
+    printf("%p\n", p3);
+    p3 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p3);
+    
+    mallocTest *p4 = NULL;
+    printf("%p\n", p4);
+    p4 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p4);
+
+    mallocTest *p5 = NULL;
+    printf("%p\n", p5);
+    p5 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p5);
+
+    mallocTest *p6 = NULL;
+    printf("%p\n", p6);
+    p6 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p6);
+
+    mallocTest *p7 = NULL;
+    printf("%p\n", p7);
+    p7 = (mallocTest *)new_object(sizeof(mallocTest));
+    printf("%p\n\n", p7)
+
+
 }

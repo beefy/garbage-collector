@@ -13,7 +13,7 @@ int blocks_allocated = 0;
  */
 
 // create a new object in memory
-void new_object(void* p, size_t size) {
+void *new_object(size_t size) {
     blocks_allocated++;
     if (blocks_allocated > MAX_BLOCKS_TO_ALLOCATE) {
         sweep(allocated_memory);
@@ -21,7 +21,7 @@ void new_object(void* p, size_t size) {
     }
 
     // call gc_malloc
-    p = gc_malloc(size);
+    return block_init(size);
     // push to internal struct
 }
 
@@ -132,10 +132,21 @@ void sweep(block* obj)
     // base case
     if (obj == NULL) return;
     // sweep
-    if (!obj->mark) gc_free(obj->memory);
+//    if (!obj->mark) gc_free(obj->memory);
+    if (!obj->mark) free(obj->memory);
     else obj->mark = 0;
     // recurse
     sweep(obj->next);
     return;
 }
 
+void *block_init(size_t size) {
+    block *b = (block *)malloc(sizeof(block));
+    b->size = size;
+    b->mark = 0;
+    b->memory = malloc(size);
+
+    b->next = allocated_memory;
+
+    return b->memory;
+}
