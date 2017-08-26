@@ -85,8 +85,10 @@ void* gc_malloc(size_t size)
     {
         block* tail = allocated_memory;
         if (!(b = findFreeBlock(&tail, size)))
-            if (!(b = requestAndExpand(tail, size))) return NULL;
+	{
+	    if (!(b = requestAndExpand(tail, size))) return NULL;
             else b->mark = 0;
+	}
     }
 
     return (b + 1);
