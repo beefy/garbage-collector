@@ -3,5 +3,23 @@ GC Malloc
 CS 283 - System Programming
 Drexel University
 
-To use this automated memory management system, call "new_object(void* p)" when you need to create a new object. You don't need to allocate memory for this object, or free the memory when done. The call to that function will allocate memory for it, and after a fixed number of objects are allocated, the unused memory will be automatically freed. 
+This was an extra credit project for Drexel's System Programming class.
+It was an entirely student organized project, with a mission to develop a simple and easy to use automated memory management system. 
+
+We decided to use the "mark and sweep" algorithm. It works as follows:
+- there is an internal struct representing a block of memory
+- there is a list of blocks representing the allocated memory, and another list representing the local stack of memory
+- when you create a new object, 
+	- it's memory is allocated and it's meta data is added to both lists, the local and the global
+	- there is a threshold for the number of objects to allocate before cleaning up the memory
+	- when the threshold is met:
+		- we call "mark" with the local stack of memory ("reachable" memory)
+		- mark recurses through the list and set a "mark" flag for every block reachable from the inital list of reachable memory
+		- we then call "sweep" with the global allocated memory list
+		- every block that is not marked is not used, and can be freed and popped from our list
+
+While most of the components are in place, this project is not completely finished. 
+Feel free to contribute or email one of the contributors about any questions you might have.
+
+The ultimate goal is to just call "new_object(void* p)" to create a new object, but that is not completely working yet. You need to also declare and pass in the local stack of memory. The call to new_object will allocate the memory for the object and automatically free the memory if needed. 
 
