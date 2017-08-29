@@ -21,5 +21,7 @@ We decided to use the "mark and sweep" algorithm. It works as follows:
 While most of the components are in place, this project is not completely finished. 
 Feel free to contribute or email one of the contributors about any questions you might have.
 
-The ultimate goal is to just call "new_object(void* p)" to create a new object, but that is not completely working yet. You need to also declare and pass in the local stack of memory. The call to new_object will allocate the memory for the object and automatically free the memory if needed. 
+The ultimate goal is to just call "new_object(void* p)" to create a new object, but that is not completely working yet. 
+You need to also declare and pass in the local stack of memory. 
+The call to new_object will allocate the memory for the object and automatically free the memory if needed. 
 
