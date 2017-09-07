@@ -1,4 +1,3 @@
-
 GC Malloc
 CS 283 - System Programming
 Drexel University
@@ -25,3 +24,73 @@ The ultimate goal is to just call "new_object(void* p)" to create a new object, 
 You need to also declare and pass in the local stack of memory. 
 The call to new_object will allocate the memory for the object and automatically free the memory if needed. 
 
+===============FUNCTION DESCRIPTIONS===============
+- findFreeBlock()
+	- Searches the list of objects and try to
+	  find a free block of memory
+	- Returns a pointer to the free block in the
+	  list of objects
+
+- requestAndExpand()
+	- Request more core memory using the sbrk()
+	  function
+	- Finds the top of the current heap, tries 
+	  to expand the program break by the 
+	  requested size of the new object
+	- Returns the previous top of the heap
+	  (prior to the sbrk() call) if the request
+	  was authorized. Otherwise, returns NULL.
+
+- merge()
+	- Iterates through the object list to merge
+	  consecutive free blocks which aren't one
+	  single block
+	- If a non-null, free block is found and its
+	  successor is also free, increment the size
+	  of the current block to essentially swallow
+	  its successor. 
+		- This ensures each free block is as 
+ 		  large as it possibly can be.
+		  Whenever possible, we want the
+		  algorithm to take advantage of the
+		  findFreeBlock() function so we don't
+		  have to constantly request more core
+		  memory. The merge function helps
+		  mitigate more core memory requests.
+
+- gc_malloc()
+	- Allocates a space in memory of the size
+	  which the user requests
+	- Ensures the user entered a number > 0
+	- Attempts to find a freed block of memory
+	  to reuse using the findFreeBloc() function
+	  If that fails, it requests more core memory
+ 	  using the requestAndExpand() function.
+	- On success, returns the address of the newly 
+	  allocated memory. Otherwise, returns NULL.
+
+- gc_free()
+	- Marks the object as free in the list of
+	  objects
+	- Ensures the pointer isn't NULL or already
+	  free before marking it
+	- Calls the merge() function to merge
+	  consecutive free blocks
+
+- mark()
+	- Recursively marks all reachable objects
+	  in the list of objects
+
+- sweep()
+	- Recursively sweeps (frees) all unmarked
+	  (unreachable) objects
+
+- new_object()
+	- Uses gc_malloc() function to allocate a
+	  new object
+	- Increments the number of allocated blocks
+	  (stored in a global var)
+		- If that number surpases the threshold,
+		  garbage collection is initiated
+	- Returns the value of gc_malloc()
+===================================================

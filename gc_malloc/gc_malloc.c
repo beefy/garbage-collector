@@ -1,21 +1,30 @@
 #include "gc_malloc.h"
 
-/**
+/*
   GC Malloc
-  CS 283 - System Programming
+  CS 283 - Systems Programming
+  August 2017
   Drexel University
+  Authors: Dresden Feitzinger
+  	   Allison Schinagle
+	   Nate Schultz
   */
 
 block* allocated_memory = NULL;
 int blocks_allocated = 0;
 
-/*
- * Object Create
- */
+/***************
+ Object Create
+ ***************/
 
-// create a new object in memory
+/*
+ * Create a new object in memory
+ */
 void *new_object(size_t size) {
     blocks_allocated++;
+
+    // initiate garbage collection if blocks_allocated
+    // surpases the MAX_BLOCKS_TO_ALLOCATE threshold
     if (blocks_allocated > MAX_BLOCKS_TO_ALLOCATE) {
         sweep(allocated_memory);
         blocks_allocated = 0;
@@ -26,11 +35,13 @@ void *new_object(size_t size) {
     // push to internal struct
 }
 
-/*
- * Malloc and Free functions
- */
+/***************************
+  Malloc and Free functions
+ ***************************/
 
-// find and free a block of memory
+/* 
+ * Find and free a block of memory
+ */
 block* findFreeBlock(block** last, size_t size)
 {
     block* current = allocated_memory;
@@ -43,7 +54,9 @@ block* findFreeBlock(block** last, size_t size)
     return current;
 }
 
-// expand the memory allocated for this process
+/*
+ * Expand the memory allocated for this process
+ */
 block* requestAndExpand(block* last, size_t size)
 {
     uintptr_t b = (uintptr_t)sbrk(0); // find top of heap
@@ -60,6 +73,9 @@ block* requestAndExpand(block* last, size_t size)
     return (block*)b;
 }
 
+/*
+ * Merge contiguous free blocks together
+ */
 void merge()
 {
     block *current;
@@ -75,7 +91,9 @@ void merge()
     }
 }
 
-// malloc a block of memory
+/*
+ * Allocate a block of memory
+ */
 void* gc_malloc(size_t size)
 {
     block* b;
@@ -101,7 +119,9 @@ void* gc_malloc(size_t size)
     return (b + 1);
 }
 
-// free an object
+/*
+ * Free an object
+ */
 void gc_free(void* p)
 {
     if (!p) return;
@@ -112,11 +132,13 @@ void gc_free(void* p)
     merge();
 }
 
-/*
- * Mark and Sweep
- */
+/****************
+  Mark and Sweep
+ ****************/
 
-// mark all reachable memory
+/*
+ * Mark all reachable memory
+ */
 void mark(block* obj)
 {
     // base case
@@ -129,7 +151,9 @@ void mark(block* obj)
 }
 
 
-// free all the unmarked memory
+/* 
+ * Free all the unmarked memory
+ */
 void sweep(block* obj)
 {
     // base case
